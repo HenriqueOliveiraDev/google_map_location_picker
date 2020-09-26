@@ -210,61 +210,201 @@ class MapPickerState extends State<MapPicker> {
     return Align(
       alignment: widget.resultCardAlignment ?? Alignment.bottomCenter,
       child: Padding(
-        padding: widget.resultCardPadding ?? EdgeInsets.all(16.0),
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: widget.resultCardPadding ?? EdgeInsets.all(0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 220,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
+            ),
+          ),
           child: Consumer<LocationProvider>(
               builder: (context, locationProvider, _) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Flexible(
-                    flex: 20,
-                    child: FutureLoadingBuilder<Map<String, String>>(
-                      future: getAddress(locationProvider.lastIdleLocation),
-                      mutable: true,
-                      loadingIndicator: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          CircularProgressIndicator(),
-                        ],
-                      ),
-                      builder: (context, data) {
-                        _address = data["address"];
-                        _placeId = data["placeId"];
-                        return Text(
-                          _address ??
-                              S.of(context)?.unnamedPlace ??
-                              'Unnamed place',
-                          style: TextStyle(fontSize: 18),
-                        );
-                      },
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Confirmar localização',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontFamily: "Gilroy",
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black,
                     ),
                   ),
-                  Spacer(),
-                  FloatingActionButton(
-                    onPressed: () {
-                      Navigator.of(context).pop({
-                        'location': LocationResult(
-                          latLng: locationProvider.lastIdleLocation,
-                          address: _address,
-                          placeId: _placeId,
-                        )
-                      });
-                    },
-                    child: widget.resultCardConfirmIcon ??
-                        Icon(Icons.arrow_forward),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Flexible(
+                        flex: 20,
+                        child: FutureLoadingBuilder<Map<String, String>>(
+                          future: getAddress(locationProvider.lastIdleLocation),
+                          mutable: true,
+                          loadingIndicator: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                          builder: (context, data) {
+                            _address = data["address"];
+                            _placeId = data["placeId"];
+                            return Container(
+                              height: 70,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xFF00E0FF), width: 2),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                _address ??
+                                    S.of(context)?.unnamedPlace ??
+                                    'Unnamed place',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: RaisedButton(
+                      elevation: 0,
+                      color: Color(0xFF00E0FF),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('Confirmar'),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop({
+                          'location': LocationResult(
+                            latLng: locationProvider.lastIdleLocation,
+                            address: _address,
+                            placeId: _placeId,
+                          )
+                        });
+                      }),
+                ),
+              ],
             );
           }),
         ),
       ),
     );
   }
+
+  // Widget locationCard() {
+  //   return Align(
+  //     alignment: Alignment.bottomCenter,
+  //     child: Container(
+  //       width: MediaQuery.of(context).size.width,
+  //       height: 220,
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.only(
+  //           topLeft: Radius.circular(20.0),
+  //           topRight: Radius.circular(20.0),
+  //         ),
+  //       ),
+  //       child:
+  //           Consumer<LocationProvider>(builder: (context, locationProvider, _) {
+  //         return Column(
+  //             mainAxisAlignment: MainAxisAlignment.start,
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               Padding(
+  //                 padding: EdgeInsets.all(16),
+  //                 child: Text(
+  //                   'Confirmar localização',
+  //                   style: TextStyle(
+  //                     fontSize: 22,
+  //                     fontFamily: "Gilroy",
+  //                     fontWeight: FontWeight.w800,
+  //                     color: Colors.black,
+  //                   ),
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: EdgeInsets.all(20),
+  //                 child: Container(
+  //                   height: 70,
+  //                   width: 20,
+  //                   decoration: BoxDecoration(
+  //                     border: Border.all(color: Color(0xFF00E0FF), width: 2),
+  //                     borderRadius: BorderRadius.all(
+  //                       Radius.circular(8),
+  //                     ),
+  //                   ),
+  //                   child: Flexible(
+  //                     flex: 20,
+  //                     child: FutureLoadingBuilder<Map<String, String>>(
+  //                       future: getAddress(locationProvider.lastIdleLocation),
+  //                       mutable: true,
+  //                       loadingIndicator: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: <Widget>[
+  //                           CircularProgressIndicator(),
+  //                         ],
+  //                       ),
+  //                       builder: (context, data) {
+  //                         _address = data["address"];
+  //                         _placeId = data["placeId"];
+  //                         return Align(
+  //                           alignment: Alignment.centerLeft,
+  //                           child: Padding(
+  //                             padding: EdgeInsets.only(left: 12),
+  //                             child: Text(
+  //                               _address ??
+  //                                   S.of(context)?.unnamedPlace ??
+  //                                   'Unnamed place',
+  //                               style: TextStyle(fontSize: 18),
+  //                             ),
+  //                           ),
+  //                         );
+  //                       },
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Container(
+  //                 width: 20,
+  //                 child: RaisedButton(
+  //                     elevation: 0,
+  //                     color: Color(0xFF00E0FF),
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.all(16.0),
+  //                       child: Text('Confirmar'),
+  //                     ),
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop({
+  //                         'location': LocationResult(
+  //                           latLng: locationProvider.lastIdleLocation,
+  //                           address: _address,
+  //                           placeId: _placeId,
+  //                         )
+  //                       });
+  //                     }),
+  //               ),
+  //             ]);
+  //       }),
+  //     ),
+  //   );
+  // }
 
   Future<Map<String, String>> getAddress(LatLng location) async {
     try {
@@ -293,7 +433,11 @@ class MapPickerState extends State<MapPicker> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.place, size: 56),
+            Icon(
+              Icons.place,
+              size: 56,
+              color: Color(0xFF00E0FF),
+            ),
             Container(
               decoration: ShapeDecoration(
                 shadows: [
@@ -460,27 +604,15 @@ class _MapFabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topRight,
-      margin: const EdgeInsets.only(top: kToolbarHeight + 24, right: 8),
-      child: Column(
-        children: <Widget>[
-          if (layersButtonEnabled)
-            FloatingActionButton(
-              onPressed: onToggleMapTypePressed,
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-              mini: true,
-              child: const Icon(Icons.layers),
-              heroTag: "layers",
-            ),
-          if (myLocationButtonEnabled)
-            FloatingActionButton(
-              onPressed: onMyLocationPressed,
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-              mini: true,
-              child: const Icon(Icons.my_location),
-              heroTag: "myLocation",
-            ),
-        ],
+      alignment: Alignment.bottomRight,
+      padding: EdgeInsets.only(bottom: 250, right: 12),
+      child: FloatingActionButton(
+        backgroundColor: Color(0xFF00E0FF),
+        onPressed: onMyLocationPressed,
+        materialTapTargetSize: MaterialTapTargetSize.padded,
+        mini: false,
+        child: const Icon(Icons.my_location),
+        heroTag: "myLocation",
       ),
     );
   }
